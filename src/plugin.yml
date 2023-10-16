@@ -1,0 +1,4 @@
+name: CascavCore
+version: 0.1-DEV
+author: org.cascav
+main: org.cascav.cascavcore.Main #to be deleted
