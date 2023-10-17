@@ -1,5 +1,6 @@
 package org.cascav.cascavcore.Player;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Currency
@@ -8,7 +9,7 @@ public class Currency
 
     int cascoins = 0;
 
-    public boolean LogPurchase(String i, String time, int c)
+    public boolean LogPurchase(String i, LocalDateTime time, int c)
     {
         int before = cascoins;
         cascoins -= c;
@@ -20,12 +21,12 @@ public class Currency
 
     public class Purchase
     {
-        public Purchase(String i, String time, int c, int b, int a)
+        public Purchase(String i, LocalDateTime time, int c, int b, int a)
         {
             item = i; timestamp = time; cost = c; before = b; after = a;
         }
         public final String item;
-        public final String timestamp;
+        public final LocalDateTime timestamp;
         public final int cost;
         public final int before;
         public final int after;

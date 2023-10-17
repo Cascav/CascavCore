@@ -1,9 +1,7 @@
 package org.cascav.cascavcore.Player;
 
-import org.bukkit.entity.Player;
-import org.cascav.cascavcore.Redis;
-import org.redisson.api.RMap;
-
+import org.cascav.cascavcore.enums.Enums;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -18,33 +16,117 @@ public class PlayerProperties
 
     // Region: Properties
         //Ranks and titles
-        public Ranks.ModRanks modRank = Ranks.ModRanks.NONE;
-        public ArrayList<Ranks.SpecialRanks> specialRanks = new ArrayList<>();
+        public Enums.ModRanks modRank = Enums.ModRanks.NONE;
+        public ArrayList<Enums.SpecialRanks> specialRanks = new ArrayList<>();
         public String Nickname = null;
 
         public Currency PlayerCurrency = new Currency();
 
 
+    // Region: Punishments
+        //All Player Punishments
+        public ArrayList<Punishment> PunishmentLog = new ArrayList<>();
+        //Current Punishments
+        private boolean muted = false;
+        public boolean isMuted()
+        {
+            if(!muted) return false;
+            for(Punishment p : PunishmentLog){
+                if(p.type == Enums.PunishmentType.MUTE && p.ends.isAfter(LocalDateTime.now()))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void Mute(String moderator, String duration, String reason)
+        {
+            LocalDateTime end = Utils.ParseDuration(duration);
+            Punishment p = new Punishment(Enums.PunishmentType.MUTE, PlayerUUID, moderator, LocalDateTime.now(), end, reason);
+            PunishmentLog.add(p);
+            Utils.UpdateAllPunishments(PlayerUUID, PunishmentLog);
+            muted = true;
+        }
+        public void unMute()
+        {
+            muted = false;
+            for(Punishment p : PunishmentLog)
+            {
+                if(p.type == Enums.PunishmentType.MUTE)
+                {
+                    p.ends = LocalDateTime.now();
+                }
+            }
+            Utils.UpdateAllPunishments(PlayerUUID, PunishmentLog);
+        }
 
-    //Static methods
+        public boolean tempbanned = false;
+        public boolean permbanned = false;
+        public boolean isBanned()
+        {
+            if(permbanned) return true;
+            if(!tempbanned) return false;
+            for(Punishment p : PunishmentLog)
+            {
+                if(p.type == Enums.PunishmentType.TEMPBAN && p.ends.isAfter(LocalDateTime.now()))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void tempBan(String moderator, String duration, String reason)
+        {
+            LocalDateTime end = Utils.ParseDuration(duration);
+            Punishment p = new Punishment(Enums.PunishmentType.TEMPBAN, PlayerUUID, moderator, LocalDateTime.now(), end, reason);
+            PunishmentLog.add(p);
+            Utils.UpdateAllPunishments(PlayerUUID, PunishmentLog);
+            tempbanned = true;
+        }
+        public void permBan(String moderator, String reason)
+        {
+            LocalDateTime end = LocalDateTime.of(99999999, 1, 1, 0, 0, 0);
+            Punishment p = new Punishment(Enums.PunishmentType.PERMBAN, PlayerUUID, moderator, LocalDateTime.now(), end, reason);
+            PunishmentLog.add(p);
+            Utils.UpdateAllPunishments(PlayerUUID, PunishmentLog);
+            permbanned = true;
+        }
+        public void pardonBan()
+        {
+            permbanned = false; tempbanned = false;
+            for(Punishment p : PunishmentLog)
+            {
+                if(p.type == Enums.PunishmentType.TEMPBAN || p.type == Enums.PunishmentType.PERMBAN)
+                {
+                    p.ends = LocalDateTime.now();
+                }
+            }
+            Utils.UpdateAllPunishments(PlayerUUID, PunishmentLog);
+        }
+        public void logKick(String moderator, String reason)
+        {
+            LocalDateTime end = LocalDateTime.now();
+            Punishment p = new Punishment(Enums.PunishmentType.KICK, PlayerUUID, moderator, LocalDateTime.now(), end, reason);
+            PunishmentLog.add(p);
+            Utils.UpdateAllPunishments(PlayerUUID, PunishmentLog);
+        }
 
-    public static PlayerProperties GetFromPlayer(Player p)
-    {
-        RMap<UUID, PlayerProperties> AllPlayerProperties = Redis.GetAllPlayerProperties();
-        UUID uuid = p.getUniqueId();
-        if(AllPlayerProperties.containsKey(uuid)){ return AllPlayerProperties.get(uuid); }
-        PlayerProperties prop = new PlayerProperties();
-        prop.PlayerUUID = uuid;
-        prop.Nickname = p.getName();
-        AllPlayerProperties.put(uuid, prop);
-        Update(uuid, prop);
-        return prop;
-    }
+        public class Punishment
+        {
+            public Punishment(Enums.PunishmentType itype, UUID iplayerID, String imoderator, LocalDateTime itimestamp, LocalDateTime iends, String ireason) {
+                type = itype;
+                playerID = iplayerID;
+                moderator = imoderator;
+                timestamp = itimestamp;
+                ends = iends;
+                reason = ireason;
+            }
 
-    public static void Update(UUID id, PlayerProperties props)
-    {
-        RMap<UUID, PlayerProperties> map = Redis.GetAllPlayerProperties();
-        map.put(id, props);
-        Redis.UpdatePlayerProperties(map);
-    }
+            public Enums.PunishmentType type;
+            public UUID playerID;
+            public String moderator;
+            public LocalDateTime timestamp;
+            public LocalDateTime ends;
+            public String reason;
+        }
 }
