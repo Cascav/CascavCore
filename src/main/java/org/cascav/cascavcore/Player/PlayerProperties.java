@@ -1,6 +1,6 @@
 package org.cascav.cascavcore.Player;
 
-import org.cascav.cascavcore.enums.Enums;
+import org.cascav.cascavcore.Enums;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;

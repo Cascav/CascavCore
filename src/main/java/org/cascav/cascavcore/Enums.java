@@ -1,4 +1,4 @@
-package org.cascav.cascavcore.enums;
+package org.cascav.cascavcore;
 
 public class Enums {
     public enum GamemodeEnum {
@@ -12,7 +12,7 @@ public class Enums {
     public enum GamemodeVariationEnum {
         NORMAL,
         RANKED,
-        PARTY
+        PRIVATE
     }
 
     public enum PunishmentType { PERMBAN, TEMPBAN, KICK, MUTE }

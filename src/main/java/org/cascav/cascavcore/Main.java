@@ -1,19 +1,14 @@
 package org.cascav.cascavcore;
 
-import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin
+public class Main
 {
-    //Placeholder for testing, should not be exported!
-    @Override
-    public void onEnable()
+    public static void Initialize()
     {
+        Redis.Initialize();
 
-    }
-
-    @Override
-    public void onDisable()
-    {
+        Database.ClonePlayerPropertiesDatabase();
+        Database.ClonePunishmentLogDatabase();
 
     }
 }

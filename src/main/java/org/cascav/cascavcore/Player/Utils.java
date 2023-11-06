@@ -2,7 +2,7 @@ package org.cascav.cascavcore.Player;
 
 import org.bukkit.entity.Player;
 import org.cascav.cascavcore.Redis;
-import org.cascav.cascavcore.enums.Enums;
+import org.cascav.cascavcore.Enums;
 import org.redisson.api.RMap;
 
 import java.time.LocalDateTime;

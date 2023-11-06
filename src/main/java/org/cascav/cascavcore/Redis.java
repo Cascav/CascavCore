@@ -3,7 +3,6 @@ package org.cascav.cascavcore;
 import org.cascav.cascavcore.Player.PartyProperties;
 import org.cascav.cascavcore.Player.PlayerProperties;
 import org.redisson.Redisson;
-import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.api.RMap;
@@ -16,7 +15,7 @@ public class Redis {
     private static final Config config = new Config();
     private static RedissonClient redisson;
     private static boolean initialized = false;
-    public void Initialize()
+    public static void Initialize()
     {
         if(initialized) return;
         initialized = true;
