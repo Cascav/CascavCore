@@ -10,7 +10,7 @@ public class GetLogin
     public static String[] GetLoginInfo() {
         String[] login = new String[3];
         // Get the InputStream for the DBLogin.txt file from the resources folder
-        try (InputStream inputStream = GetLogin.class.getClassLoader().getResourceAsStream("DBLogin.txt")) {
+        try (InputStream inputStream = GetLogin.class.getClassLoader().getResourceAsStream("Logins/DBLogin.txt")) {
             if (inputStream == null) {
                 System.err.println("File not found!");
                 return null;
