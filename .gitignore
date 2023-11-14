@@ -3,8 +3,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### Custom Files ###
-**/src/main/resources/DBLogin.txt
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -40,3 +38,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/src/main/resources/Logins/
