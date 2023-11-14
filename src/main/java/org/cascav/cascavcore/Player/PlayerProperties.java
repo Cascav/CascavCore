@@ -9,7 +9,7 @@ public class PlayerProperties
 {
     //PlayerProperties is a class stored in redis that contains all information a player should have.
     //These values are defaults; They can be modified later.
-    //All of these are backed up in the database.+
+    //All of these are backed up in the database.
 
     //player
     public UUID PlayerUUID = null;
@@ -19,6 +19,14 @@ public class PlayerProperties
         public Enums.ModRanks modRank = Enums.ModRanks.NONE;
         public ArrayList<Enums.SpecialRanks> specialRanks = new ArrayList<>();
         public String Nickname = null;
+
+        public String getRanksAsString()
+        {
+            String ranks = "";
+            ranks += Utils.getModRankAsString(modRank);
+            ranks += Utils.getSpecialRanksAsString(specialRanks);
+            return ranks;
+        }
 
         public Currency PlayerCurrency = new Currency();
 
