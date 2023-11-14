@@ -12,16 +12,15 @@ import java.util.UUID;
 
 public class Database
 {
-    static final String dbUrl = "url";
-    static final String dbUs = "username";
-    static final String dbPw = "password";
-
     //clone the database into a redis instance
     public static void ClonePlayerPropertiesDatabase()
     {
         try {
+            String[] login = org.cascav.cascavcore.GetLogin.GetLoginInfo();
+            if(login == null) return;
+
             // Connect to SQL database
-            Connection sqlConnection = DriverManager.getConnection(dbUrl, dbUs, dbPw);
+            Connection sqlConnection = DriverManager.getConnection(login[0], login[1], login[2]);
 
             // Create a statement for SQL queries
             Statement statement = sqlConnection.createStatement();
@@ -58,8 +57,11 @@ public class Database
     public static void ClonePunishmentLogDatabase()
     {
         try {
+            String[] login = org.cascav.cascavcore.GetLogin.GetLoginInfo();
+            if(login == null) return;
+
             // Connect to SQL database
-            Connection sqlConnection = DriverManager.getConnection(dbUrl, dbUs, dbPw);
+            Connection sqlConnection = DriverManager.getConnection(login[0], login[1], login[2]);
 
             // Create a statement for SQL queries
             Statement statement = sqlConnection.createStatement();
